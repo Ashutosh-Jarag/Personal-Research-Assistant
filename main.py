@@ -6,6 +6,11 @@ It contains the FastAPI application and all its routes.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.llm import test_llm_connection
+
+# import warnings
+# warnings.filterwarnings("ignore", category=UserWarning, module="langchain_google_genai")
+
 
 
 # Create FastAPI instance
@@ -30,7 +35,6 @@ app.add_middleware(
 
 
 # Root endpoint
-
 @app.get("/")
 async def root():
     """
@@ -46,12 +50,27 @@ async def root():
     }
 
 
+
+# Healt check endpoint
 @app.get("health")
 async def health():
     """
     Health check endpoint that returns a success message.
     """
     return {"status": "success"}
+
+
+# Check if LLM connection works
+@app.get("/test-llm")
+async def test_llm():
+    """
+    Test LLM Connection Endpoint.
+    """
+    result = await test_llm_connection()
+    return result
+
+
+
 
 
 # This runs when you execute: python main.py
